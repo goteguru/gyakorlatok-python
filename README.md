@@ -1,0 +1,2 @@
+# gyakorlatok-python
+Gyakorló feladatok

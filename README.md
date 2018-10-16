@@ -2,4 +2,5 @@
 Gyakorló feladatok
 
 
-# may the force be with you
+* Pygame-test: pygame tesztek, sebesség, alpha kezelés
+

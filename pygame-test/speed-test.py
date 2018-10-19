@@ -45,7 +45,7 @@ def main():
     number_of_sprites = 2000
     sprite = teki
     background = memsurface
-    memoryblit = False
+    use_blits = False
 
     # Event loop
     while True:
@@ -82,16 +82,16 @@ def main():
                     sprite = spr_alpha
                 
                 if event.key == K_m: 
-                    memoryblit = not memoryblit
-                    print("In memory blit:", memoryblit )
+                    use_blits = not use_blits
+                    print("multiblit:", use_blits )
 
         ### speedtest core ###
 
         if not pause:
-            if memoryblit:
-                for i in range(number_of_sprites):
-                    background.blit(sprite, (randint(0,scrw), randint(0,scrh)))
+            if use_blits:
                 screen.blit(background,(0,0))
+                blitlist = [ (sprite, (randint(0,scrw), randint(0,scrh))) for _ in range(number_of_sprites) ]
+                screen.blits(blitlist)
             else:
                 screen.blit(background,(0,0))
                 for i in range(number_of_sprites):

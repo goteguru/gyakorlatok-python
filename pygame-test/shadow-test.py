@@ -48,12 +48,11 @@ while runme:
     ### draw shadows
     shadows.fill((0, 0, 0, 0))
     for p in polygons:
-        for t in trapezok(p, light, 900 ):
+        for t in trapezok(p, light, 500 ):
             pygame.draw.polygon(shadows, (255,0,0,255), t, 0)
 
-    pygame.draw.circle(screen, (0,255,0), light, 10, 2) 
-
     screen.blit(polysurf, (0,0))
+    pygame.draw.circle(screen, (0,255,0), light, 10, 2) 
     screen.blit(shadows, (0,0))
     pygame.display.flip()
     clock.tick(50)

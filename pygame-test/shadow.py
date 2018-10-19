@@ -44,7 +44,8 @@ def trapezok(polygon, center, maxlight):
         a1, a2 = pp1[0], pp2[0]
         l = a2 - a1
         if (l>0 and l<math.pi) or l<-math.pi: # látható
-            tpoly = ((a1,maxlight), pp1, pp2, (a2,maxlight))
+            middle = (a1+a2)/2 if l>-math.pi else (a1+a2)/2+math.pi
+            tpoly = (pp1, pp2, (a2,maxlight), (middle, maxlight), (a1,maxlight) )
             tdek = list(from_polar(center, p) for p in tpoly)
             quads.append(tdek)
     return(quads)

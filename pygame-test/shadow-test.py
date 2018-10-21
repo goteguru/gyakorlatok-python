@@ -34,6 +34,8 @@ runme = True
 clock = pygame.time.Clock()
 counter = 0
 
+newpoly = []
+
 while runme:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -41,19 +43,35 @@ while runme:
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 runme = False
+            if event.key == K_ENTER:
+                polygons.append(newpoly)
+                print(newpoly,",")
+                newpoly = []
+        if event.type == MOUSEDOWN:
+            point = pygame.mouse.get_pos()
+            newpoly.append(point)
+            
 
-    ####
+
+    #### --- TODO: edgelist egyesítése, cx,cy levonás
 
     light = pygame.mouse.get_pos()
     ### draw shadows
     shadows.fill((0, 0, 0, 0))
     for p in polygons:
         for t in trapezok(p, light, 500 ):
-            pygame.draw.polygon(shadows, (255,0,0,255), t, 0)
+            pygame.draw.polygon(shadows, (0,0,255,255), t, 0)
 
     screen.blit(polysurf, (0,0))
     pygame.draw.circle(screen, (0,255,0), light, 10, 2) 
     screen.blit(shadows, (0,0))
+
+    # show newpoly
+    pp = newpoly[0]
+    for p in newpoly:
+        pygame.draw.line(display,(255,0,0), pp,p)
+        
+
     pygame.display.flip()
     clock.tick(50)
     counter+=1

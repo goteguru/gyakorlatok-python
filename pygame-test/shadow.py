@@ -32,7 +32,7 @@ def from_polar(center, ppoint):
 def fok(ppoint):
     return (ppoint[0]*180/math.pi, ppoint[1])
 
-def trapezok(polygon, center, maxlight):
+def shadows(polygon, center, maxlight):
     """ kiszűri a nemlátható éleket  és létrehozza az árnyéktrapézokat
         x2 > x1 kivéve ha "túlfordul" vagyis átlép a 360 fokos határon
         (ez akkor fordul elő ha x1-x2 > pi)
@@ -72,7 +72,7 @@ if __name__ == "__main__":
         print("-----------------------")
     print()
 
-    print (trapezok(pontok, center, 200))
+    print (shadows(pontok, center, 200))
 
 
     

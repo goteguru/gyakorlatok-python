@@ -2,7 +2,7 @@
 
 import math
 import pygame
-from shadow import trapezok
+from shadow import shadows
 from pygame.locals import *
 import polygons
 
@@ -60,7 +60,7 @@ while runme:
     ### draw shadows
     shadows.fill((0, 0, 0, 0))
     for p in polygons:
-        for t in trapezok(p, light, 500 ):
+        for t in shadows(p, light, 500 ):
             pygame.draw.polygon(shadows, (0,0,255,255), t, 0)
 
     pygame.draw.circle(screen, (0,255,0), light, 10, 2) 

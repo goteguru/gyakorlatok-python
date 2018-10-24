@@ -4,14 +4,9 @@ import math
 import pygame
 from shadow import trapezok
 from pygame.locals import *
+import polygons
 
-
-polygons = [ 
-    [(10,10),(30,30),(50,30)],
-    [(200,200),(330,240),(380,90)],
-    [(480,520),(475,410),(400,450)],
-    [(300,300),(500,300),(500,330),(340,330),(340,450),(300,450)][::-1],
-    ]
+polygons = polygons.polygons
 
 
 screensize = 800, 800
@@ -43,11 +38,16 @@ while runme:
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 runme = False
-            if event.key == K_ENTER:
+            if event.key == K_RETURN:
                 polygons.append(newpoly)
-                print(newpoly,",")
+                pygame.draw.polygon(polysurf, white, newpoly, 0)
                 newpoly = []
-        if event.type == MOUSEDOWN:
+            if event.key == K_s:
+                with open("polygons.py","w") as f:
+                    f.write("polygons = ")
+                    f.write(repr(polygons))
+
+        if event.type == MOUSEBUTTONDOWN:
             point = pygame.mouse.get_pos()
             newpoly.append(point)
             
@@ -55,6 +55,7 @@ while runme:
 
     #### --- TODO: edgelist egyesítése, cx,cy levonás
 
+    screen.blit(polysurf, (0,0))
     light = pygame.mouse.get_pos()
     ### draw shadows
     shadows.fill((0, 0, 0, 0))
@@ -62,14 +63,14 @@ while runme:
         for t in trapezok(p, light, 500 ):
             pygame.draw.polygon(shadows, (0,0,255,255), t, 0)
 
-    screen.blit(polysurf, (0,0))
     pygame.draw.circle(screen, (0,255,0), light, 10, 2) 
     screen.blit(shadows, (0,0))
 
     # show newpoly
-    pp = newpoly[0]
+    if len(newpoly) > 0 : pp = newpoly[0]
     for p in newpoly:
-        pygame.draw.line(display,(255,0,0), pp,p)
+        pygame.draw.line(screen,(255,0,0), pp,p)
+        pp = p
         
 
     pygame.display.flip()

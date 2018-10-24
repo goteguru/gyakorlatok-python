@@ -62,10 +62,11 @@ while runme:
     #        pygame.draw.polygon(shadows, (0,0,255,255), t, 0)
 
     ### draw active edges
-    for p in filter(ccw, edges2(polygons, light)):
+    filtered = clip(Rect(-100,-100,200,200),list(filter(ccw, edges2(polygons, light))))  
+    for e in filtered:
         pygame.draw.line(screen,(255,0,0), 
-                (p[0][0] + light[0], p[0][1] + light[1]) , 
-                (p[1][0] + light[0], p[1][1] + light[1]),3)
+                (e[0][0] + light[0], e[0][1] + light[1]) , 
+                (e[1][0] + light[0], e[1][1] + light[1]),3)
 
 
     pygame.draw.circle(screen, (0,255,0), light, 10, 2) 

@@ -54,6 +54,37 @@ def ccw(edge):
     ((x1,y1),(x2,y2)) = edge
     return (x1*y2)-(y1*x2) > 0
 
+def clip(rect, edgelist):
+    """ clip edgelist to rectangular area 
+        return None if not in 
+    """
+    def clip_edge(edge): # -> edge
+        cx1,cy1,w,h = rect
+        cx2,cy2 = cx1 + w, cy1 + h
+        p1, p2 = edge
+
+        def code(p):
+            code = 0b000
+            if p[0] < cx1: code  = 0b0001  
+            if p[0] > cx2: code  = 0b0010  
+            if p[1] < cy1: code |= 0b0100  
+            if p[1] > cy2: code |= 0b1000  
+            return code
+
+        code1 , code2 = code(p1), code(p2)
+        
+        if code1 == 0 and code2 == 0 :  return edge # completely inside
+        if code1 & code2 != 0:          return None # completely outside
+
+        # at least one of the point is outside (find it)
+        outpoint,otherpoint = p1,p2 if code1 == 0 else p2,p1
+        ### TODO: actually clip the edge
+        cedge = edge
+        return cedge
+
+    return list(filter(None,map(clip_edge, edgelist)))
+
+
 def shadows(polygon, center, maxlight):
     """ kiszűri a nemlátható éleket  és létrehozza az árnyéktrapézokat
         x2 > x1 kivéve ha "túlfordul" vagyis átlép a 360 fokos határon

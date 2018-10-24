@@ -1,5 +1,5 @@
 import math
-def lines(coordlist):
+def edges(coordlist):
     """
     koordináta listából éllistát csinál. 
     [(10,10), (30,30), (50,30)] ->
@@ -8,6 +8,23 @@ def lines(coordlist):
     num = len(coordlist)
     edges = [(coordlist[i],coordlist[i+1]) for i in range(num-1)]
     edges.append((coordlist[num-1], coordlist[0]))
+    return edges
+
+def offset(points, center):
+    return [(v[0] - center[0], v[1] - center[1]) for v in points]
+
+def edges2(poligons, center):
+    """
+    convert list of polygons to edge list relative to _center_
+    [(10,10), (30,30), (50,30)] ->
+    [((10,10), (30,30)), ((30,30), (50,30)), ((50,30), (10,10))] 
+    """
+    cx,cy = center
+    edges = []
+    for origp in poligons:
+        p = offset(origp, center)
+        edges += [(p[i],p[i+1]) for i in range(len(p)-1)]
+        edges.append((p[-1], p[0]))
     return edges
 
 def to_polar(center, point):
@@ -32,6 +49,11 @@ def from_polar(center, ppoint):
 def fok(ppoint):
     return (ppoint[0]*180/math.pi, ppoint[1])
 
+def ccw(edge):
+    """ return true if the edge is counter clockwise directed """
+    ((x1,y1),(x2,y2)) = edge
+    return (x1*y2)-(y1*x2) > 0
+
 def shadows(polygon, center, maxlight):
     """ kiszűri a nemlátható éleket  és létrehozza az árnyéktrapézokat
         x2 > x1 kivéve ha "túlfordul" vagyis átlép a 360 fokos határon
@@ -39,7 +61,9 @@ def shadows(polygon, center, maxlight):
     """
     cx, cy = center
     quads = []
-    for p1, p2 in lines(polygon):
+
+    ccw_edges = filter(ccw, edges(polygon))
+    for p1, p2 in ccw_edges:
         pp1, pp2 = to_polar(center, p1), to_polar(center, p2)
         a1, a2 = pp1[0], pp2[0]
         l = a2 - a1
@@ -48,6 +72,9 @@ def shadows(polygon, center, maxlight):
             tpoly = (pp1, pp2, (a2,maxlight), (middle, maxlight), (a1,maxlight) )
             tdek = list(from_polar(center, p) for p in tpoly)
             quads.append(tdek)
+        else:
+            print("wtf", l, a1,a2,p1,p2)
+
     return(quads)
 
 

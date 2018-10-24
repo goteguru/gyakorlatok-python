@@ -2,7 +2,7 @@
 
 import math
 import pygame
-from shadow import shadows
+from shadow import *
 from pygame.locals import *
 import polygons
 
@@ -52,16 +52,21 @@ while runme:
             newpoly.append(point)
             
 
-
-    #### --- TODO: edgelist egyesítése, cx,cy levonás
-
     screen.blit(polysurf, (0,0))
     light = pygame.mouse.get_pos()
+
     ### draw shadows
-    shadows.fill((0, 0, 0, 0))
-    for p in polygons:
-        for t in shadows(p, light, 500 ):
-            pygame.draw.polygon(shadows, (0,0,255,255), t, 0)
+    #shadows.fill((0, 0, 0, 0))
+    #for p in polygons:
+    #    for t in shadows(p, light, 500 ):
+    #        pygame.draw.polygon(shadows, (0,0,255,255), t, 0)
+
+    ### draw active edges
+    for p in filter(ccw, edges2(polygons, light)):
+        pygame.draw.line(screen,(255,0,0), 
+                (p[0][0] + light[0], p[0][1] + light[1]) , 
+                (p[1][0] + light[0], p[1][1] + light[1]),3)
+
 
     pygame.draw.circle(screen, (0,255,0), light, 10, 2) 
     screen.blit(shadows, (0,0))

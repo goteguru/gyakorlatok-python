@@ -1,23 +1,8 @@
 import math
 from itertools import tee, count
 
-def edges(coordlist):
-    """
-    koordináta listából éllistát csinál. 
-    [(10,10), (30,30), (50,30)] ->
-    [((10,10), (30,30)), ((30,30), (50,30)), ((50,30), (10,10))] 
-    """
-    num = len(coordlist)
-    edges = [(coordlist[i],coordlist[i+1]) for i in range(num-1)]
-    edges.append((coordlist[num-1], coordlist[0]))
-    return edges
-
 def iter_edges(poligons):
-    """
-    iterate over edges of poligons 
-    [(10,10), (30,30), (50,30)] ->
-    [((10,10), (30,30)), ((30,30), (50,30)), ((50,30), (10,10))] 
-    """
+    """ iterate over all edges of poligons (list of (x,y) points) """
     for pol in poligons:
         for i in range(len(pol)-1):
             yield (pol[i],pol[i+1])
@@ -51,10 +36,8 @@ def ccw(edge):
     return not cw(edge)
 
 def clip(rect, edgelist):
-    """ clip edgelist to rectangular area 
-        return None if not in 
-    """
-    def clip_edge(edge): # -> edge
+    """ clip edgelist to rectangular area"""
+    def clip_edge(edge): # -> edge (or None if not contained)
         cx1,cy1,w,h = rect
         cx2,cy2 = cx1 + w, cy1 + h
         p1, p2 = edge
@@ -110,12 +93,9 @@ def shadows(polygons, viewpoint, maxrange = None, direction=ccw):
     for p1, p2 in tr_edges:
         pp1, pp2 = to_polar(p1), to_polar(p2)
         a1, a2 = pp1[0], pp2[0]
-        l = a2 - a1
         
         debug.append((p1,p2))
-        tpoly = (pp1, pp2, (a2,maxrange), (a1,maxrange) )
-        tdek = list(from_polar(p) for p in tpoly)
-
+        tdek = (p1, p2, from_polar((a2,maxrange)), from_polar((a1,maxrange)) )
         quads.append(offset(vx,vy)(tdek))
 
     return (quads, debug)

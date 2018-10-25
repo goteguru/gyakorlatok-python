@@ -22,7 +22,7 @@ polysurf.fill((0, 0, 0))
 for p in polygons :
     pygame.draw.polygon(polysurf, white, p, 0)
 
-shadows = pygame.Surface(screensize, SRCALPHA)
+shadowmap = pygame.Surface(screensize, SRCALPHA)
 
 #### Main loop ####
 runme = True
@@ -56,21 +56,21 @@ while runme:
     light = pygame.mouse.get_pos()
 
     ### draw shadows
-    #shadows.fill((0, 0, 0, 0))
-    #for p in polygons:
-    #    for t in shadows(p, light, 500 ):
-    #        pygame.draw.polygon(shadows, (0,0,255,255), t, 0)
+    shadowmap.fill((0, 0, 0, 0))
 
-    ### draw active edges
-    filtered = clip(Rect(-100,-100,200,200),list(filter(ccw, edges2(polygons, light))))  
-    for e in filtered:
+    shadowlist, edgelist = shadows(polygons,light,300)
+
+    for s in shadowlist:
+        pygame.draw.polygon(shadowmap, (0,0,255,255), s, 0)
+
+    pygame.draw.circle(screen, (0,255,0), light, 10, 2) 
+    screen.blit(shadowmap, (0,0))
+    
+    ### draw active debug edges
+    for e in edgelist:
         pygame.draw.line(screen,(255,0,0), 
                 (e[0][0] + light[0], e[0][1] + light[1]) , 
                 (e[1][0] + light[0], e[1][1] + light[1]),3)
-
-
-    pygame.draw.circle(screen, (0,255,0), light, 10, 2) 
-    screen.blit(shadows, (0,0))
 
     # show newpoly
     if len(newpoly) > 0 : pp = newpoly[0]
